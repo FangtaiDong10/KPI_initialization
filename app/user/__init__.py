@@ -19,6 +19,10 @@ def permission_required(permission=None):
                     return {'message': f"Permission '{permission}' is required"}
 
             return {'message': "Permission denied"}, 403
+        
+        return decorator
+    
+    return wrapper
 
 
 

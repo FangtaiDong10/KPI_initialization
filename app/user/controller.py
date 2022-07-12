@@ -1,6 +1,8 @@
 import datetime
 from flask_restx import Namespace, Resource
 from flask import request
+
+from app.user import permission_required
 from .model import User, Admin, Student, Teacher, check_password
 from flask_jwt_extended import create_access_token, current_user, jwt_required
 
@@ -36,6 +38,7 @@ user_api = Namespace('users', description='User related operations')
 
 @user_api.route('/')
 class UserList(Resource):
-    @jwt_required()
+    # @jwt_required()
+    @permission_required('system_owner')
     def get(self):
         return [user.to_dict() for user in User.objects()], 200
