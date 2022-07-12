@@ -1,4 +1,3 @@
-import re
 from flask_mongoengine import Document
 from mongoengine import StringField, ReferenceField, ListField
 import bcrypt
