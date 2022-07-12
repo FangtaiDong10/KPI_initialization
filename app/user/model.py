@@ -1,5 +1,25 @@
+import re
 from flask_mongoengine import Document
 from mongoengine import StringField, ReferenceField, ListField
+import bcrypt
+import base64
+import hashlib
+
+# encrypt method
+
+
+def get_hash_password(plain_text_password):
+
+    # utf-8 is the default encoding to binary string
+    # digest is the hash function which is used to generate the hash
+    return bcrypt.hashpw(base64.b64encode(hashlib.sha256(plain_text_password.encode('utf8'))).digest(),
+                         bcrypt.gensalt()).decode('utf8')
+
+
+# compare method plain_text_password and hashed_password(stored in db)
+def check_password(plain_text_password, hashed_password):
+    return bcrypt.checkpw(base64.b64encode(hashlib.sha256(plain_text_password.encode('utf8'))).digest(),
+                          hashed_password.encode('utf8'))
 
 
 class User(Document):
@@ -42,7 +62,6 @@ class Admin(User):
 
 class Teacher(User):
     abn = StringField(max_length=20)
-    
+
     def to_dict(self):
         return super().to_dict() | {"abn": self.abn}
-
