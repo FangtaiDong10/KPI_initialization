@@ -15,9 +15,12 @@ api = Api(api_bp)
 
 # import apis from other modules
 from app.campus.controller import campus_api
-from app.user.controller import auth_api
+from app.user.controller import auth_api, user_api
+from app.user import register_user_lookup
+
 api.add_namespace(campus_api)
 api.add_namespace(auth_api)
+api.add_namespace(user_api)
 
 
 def create_app():
@@ -53,7 +56,8 @@ def create_app():
     CORS(app)
 
     # JWT
-    JWTManager(app)
+    jwt = JWTManager(app)
+    register_user_lookup(jwt)
 
     # API register
     app.register_blueprint(api_bp)

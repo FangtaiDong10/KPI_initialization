@@ -1,10 +1,8 @@
-from datetime import datetime
-from email import message
-import imp
+import datetime
 from flask_restx import Namespace, Resource
 from flask import request
 from .model import User, Admin, Student, Teacher, check_password
-from flask_jwt_extended import create_access_token, current_user
+from flask_jwt_extended import create_access_token, current_user, jwt_required
 
 auth_api = Namespace('auth', description='Authentication related operations')
 
@@ -31,4 +29,13 @@ class login(Resource):
             identity=user.username, expires_delta=datetime.timedelta(days=30))
 
         # create a response containing the token
-        return {"user":user.to_dict(), "token":jwt_token}, 201
+        return {"user": user.to_dict(), "token": jwt_token}, 201
+
+
+user_api = Namespace('users', description='User related operations')
+
+@user_api.route('/')
+class UserList(Resource):
+    @jwt_required()
+    def get(self):
+        return [user.to_dict() for user in User.objects()], 200
