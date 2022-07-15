@@ -9,9 +9,12 @@ from flask_jwt_extended import current_user
 def permission_required(permission=None):
     def wrapper(func):
         @jwt_required()
+
+        # 可以保留传入的func函数的参数，不会被装饰器函数覆盖
         @functools.wraps(func)
         def decorator(*args, **kwargs):
-
+            
+            # 如果用户没有登录，则抛出异常
             if current_user._cls == "User.Admin":
                 if permission is None or permission in current_user.permissions:
                     return func(*args, **kwargs)

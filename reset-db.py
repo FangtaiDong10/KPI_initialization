@@ -22,7 +22,7 @@ admin = Admin(username="admin",
 
 admin.save()
 
-student = Student(username="stundent_1",
+student = Student(username="student_1",
                   display_name="Tom",
                   password=get_hash_password("password"),
                   telephone="1234567",
