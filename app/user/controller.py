@@ -7,9 +7,12 @@ from flask_jwt_extended import create_access_token, current_user, jwt_required
 from app.user import permission_required
 from .model import User, Admin, Student, Teacher, check_password, get_hash_password
 from ..campus.model import Campus
+from ..utils import paginate
 
 auth_api = Namespace('auth', description='Authentication related operations')
-#auth_api
+# auth_api
+
+
 @auth_api.route('/login')
 class login(Resource):
     # post contain request body(username and password)
@@ -37,53 +40,68 @@ class login(Resource):
 
 # user_api of User List
 user_api = Namespace('users', description='User related operations')
+
+
 @user_api.route('/')
 class UserList(Resource):
     # @jwt_required()
     @permission_required()
     def get(self):
 
-        user_type = request.args.gets("user_type", None)
         obj_cls = User
-        if user_type == "admin":
-            obj_cls = Admin
-        elif user_type == "student":
-            obj_cls = Student
-        elif user_type == "teacher":
-            obj_cls = Teacher
-        
-        return [user.to_dict() for user in obj_cls.objects()], 200
+
+        if "user_type" in request.args:
+            user_type = request.args["user_type"]
+
+            if user_type == "admin":
+                obj_cls = Admin
+            elif user_type == "student":
+                obj_cls = Student
+            elif user_type == "teacher":
+                obj_cls = Teacher
+
+        # return [user.to_dict() for user in obj_cls.objects()], 200
+
+        page = request.args.get('page', 1, type=int)
+
+        return paginate(obj_cls.objects(), page_num=page, per_page=2)
 
 
 student_api = Namespace('students', description='Student related operations')
+
+
 @student_api.route('/')
 class StudentList(Resource):
     def post(self):
         request_data = request.json
         request_data['password'] = get_hash_password(request_data['password'])
-        request_data['campus'] = Campus.objects(id=request_data['campus']).first_or_404("Campus not found")
+        request_data['campus'] = Campus.objects(
+            id=request_data['campus']).first_or_404("Campus not found")
         # from_json() api using to JSON string
         student = Student(**request_data)
         student.save()
         return student.to_dict(), 201
 
 
-
 admin_api = Namespace('admins', description='Admin related operations')
+
+
 @admin_api.route('/')
 class AdminList(Resource):
     @permission_required('system_owner')
     def post(self):
         request_data = request.json
         request_data['password'] = get_hash_password(request_data['password'])
-        request_data['campus'] = Campus.objects(id=request_data['campus']).first_or_404("Campus not found")
+        request_data['campus'] = Campus.objects(
+            id=request_data['campus']).first_or_404("Campus not found")
         admin = Admin(**request_data)
         admin.save()
         return admin.to_dict(), 201
 
 
-
 teacher_api = Namespace('teachers', description='Teacher related operations')
+
+
 @teacher_api.route('/')
 class TeacherList(Resource):
     @permission_required()

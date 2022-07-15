@@ -7,7 +7,7 @@ from flask_mongoengine import MongoEngine
 from flask import Blueprint
 import logging
 import os
-from config import Config
+from app.config import Config
 
 api_bp = Blueprint('api', __name__, url_prefix='/api/v1') 
 api = Api(api_bp)
