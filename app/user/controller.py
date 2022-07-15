@@ -64,12 +64,12 @@ class UserList(Resource):
 
         # List of filters
         query = {}
-        if "campus" in request.args["campus"]:
+        if "campus" in request.args:
             query["campus"] = request.args["campus"]
 
         page = request.args.get('page', 1, type=int)
 
-        return paginate(obj_cls.objects(), page_num=page)
+        return paginate(obj_cls.objects(**query), page_num=page)
 
 
 student_api = Namespace('students', description='Student related operations')
