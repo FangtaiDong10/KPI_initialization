@@ -62,9 +62,14 @@ class UserList(Resource):
 
         # return [user.to_dict() for user in obj_cls.objects()], 200
 
+        # List of filters
+        query = {}
+        if "campus" in request.args["campus"]:
+            query["campus"] = request.args["campus"]
+
         page = request.args.get('page', 1, type=int)
 
-        return paginate(obj_cls.objects(), page_num=page, per_page=2)
+        return paginate(obj_cls.objects(), page_num=page)
 
 
 student_api = Namespace('students', description='Student related operations')
