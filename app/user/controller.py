@@ -35,14 +35,24 @@ class login(Resource):
         return {"user": user.to_dict(), "token": jwt_token}, 201
 
 
-# user_api
+# user_api of User List
 user_api = Namespace('users', description='User related operations')
 @user_api.route('/')
 class UserList(Resource):
     # @jwt_required()
     @permission_required()
     def get(self):
-        return [user.to_dict() for user in User.objects()], 200
+
+        user_type = request.args.gets("user_type", None)
+        obj_cls = User
+        if user_type == "admin":
+            obj_cls = Admin
+        elif user_type == "student":
+            obj_cls = Student
+        elif user_type == "teacher":
+            obj_cls = Teacher
+        
+        return [user.to_dict() for user in obj_cls.objects()], 200
 
 
 student_api = Namespace('students', description='Student related operations')
