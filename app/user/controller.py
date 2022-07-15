@@ -60,5 +60,28 @@ class StudentList(Resource):
 
 
 admin_api = Namespace('admins', description='Admin related operations')
+@admin_api.route('/')
+class AdminList(Resource):
+    @permission_required('system_owner')
+    def post(self):
+        request_data = request.json
+        request_data['password'] = get_hash_password(request_data['password'])
+        request_data['campus'] = Campus.objects(id=request_data['campus']).first_or_404("Campus not found")
+        admin = Admin(**request_data)
+        admin.save()
+        return admin.to_dict(), 201
+
+
 
 teacher_api = Namespace('teachers', description='Teacher related operations')
+@teacher_api.route('/')
+class TeacherList(Resource):
+    @permission_required()
+    def post(self):
+        request_data = request.json
+        request_data['password'] = get_hash_password(request_data['password'])
+        request_data['campus'] = Campus.objects(
+            id=request_data['campus']).first_or_404("Campus not found")
+        teacher = Teacher(**request_data)
+        teacher.save()
+        return teacher.to_dict(), 201
