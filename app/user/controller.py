@@ -72,6 +72,19 @@ class UserList(Resource):
         return paginate(obj_cls.objects(**query), page_num=page)
 
 
+# enquiry a specific user by user_id
+# users won't duplicate in the database
+@user_api.route("/<username>")
+class UserApi(Resource):
+    @jwt_required()
+    def get(self, username):
+        return (
+            User.objects(username=username).first_or_404(
+                message="User not found").to_dict()
+        )
+        
+
+
 student_api = Namespace('students', description='Student related operations')
 
 
