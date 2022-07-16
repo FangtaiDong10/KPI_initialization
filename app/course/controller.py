@@ -12,7 +12,6 @@ from ..utils import paginate
 
 course_api = Namespace("courses")
 
-
 @course_api.route("/")
 class CourseListApi(Resource):
     @permission_required()
@@ -27,6 +26,7 @@ class CourseListApi(Resource):
 
     @permission_required()
     def post(self):
+        # convert JSON data to document instance
         course = Course.from_json(request.data)
         course.save()
         return course.to_dict(), 201
