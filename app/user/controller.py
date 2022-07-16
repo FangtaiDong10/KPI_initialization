@@ -1,4 +1,5 @@
 import datetime
+from email import message
 from flask_restx import Namespace, Resource
 from flask import request
 from app import user
@@ -78,16 +79,28 @@ class UserList(Resource):
 class UserApi(Resource):
     @jwt_required()
     def get(self, username):
+        if username != current_user.username and not isinstance(current_user, Admin):
+            return {"message": "permission denied"}, 403
+
         return (
             User.objects(username=username).first_or_404(
                 message="User not found").to_dict()
         )
+    @permission_required()
+    def delete(self, username):
+        user = User.objects(username=username).first_or_404(message="User not found")
+        if isinstance(current_user, Admin) and "sys_owner" not in current_user.permissions:
+            return {"message": "permission denied"}, 403
         
+        user.delete()
+        
+        # usally we return a count of deleted objects
+        return user.to_dict(), 200
+
+    
 
 
 student_api = Namespace('students', description='Student related operations')
-
-
 @student_api.route('/')
 class StudentList(Resource):
     def post(self):
