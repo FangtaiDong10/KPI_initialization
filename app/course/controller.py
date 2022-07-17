@@ -30,3 +30,10 @@ class CourseListApi(Resource):
         course = Course.from_json(request.data)
         course.save()
         return course.to_dict(), 201
+
+@course_api.route("/<course_id>")
+class CourseApi(Resource):
+    @jwt_required()
+    def get(self, course_id):
+        course = Course.objects(id=course_id).first_or_404()
+        return course.to_dict()
