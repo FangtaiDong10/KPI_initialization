@@ -22,7 +22,7 @@ class login(Resource):
         password = request.json.get('password')
 
         if not username or not password:
-            return {'error': 'username or password is missing'}, 400
+            return {'message': 'username or password is missing'}, 400
 
         # find the user in the database
         user = User.objects(username=username).first_or_404(
@@ -30,7 +30,7 @@ class login(Resource):
 
         if not check_password(password, user.password):
             # authentication failed
-            return {'error': 'password is incorrect'}, 401
+            return {'message': 'password is incorrect'}, 401
 
         jwt_token = create_access_token(
             identity=user.username, expires_delta=datetime.timedelta(days=30))
