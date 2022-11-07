@@ -1,8 +1,6 @@
-from flask_jwt_extended import jwt_required
 from .model import User
-import functools
-
 from flask_jwt_extended import jwt_required
+import functools
 from flask_jwt_extended import current_user
 
 
