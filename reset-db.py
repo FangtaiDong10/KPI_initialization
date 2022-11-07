@@ -34,6 +34,6 @@ teacher = Teacher(username="teacher_1",
                   display_name="Teacher",
                   password=get_hash_password("password"),
                   telephone="1234567",
-                  abn="xxxxxxxxxxxxxxxxx",
+                  abn="xxxxxxxxxxxxxxxxx!",
                   campus=c)
 teacher.save()

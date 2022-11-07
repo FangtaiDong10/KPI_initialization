@@ -32,7 +32,7 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
 
-    # Config logger (app.root_path is the application root path)
+    #Logger (app.root_path is the application root path)
     log_path = os.path.join(app.root_path, 'logs')
     
     # check if log directory exists, if not create it
@@ -53,16 +53,24 @@ def create_app():
     app.logger.addHandler(file_handler)
     app.logger.setLevel(logging.DEBUG)
 
+
+
     # DB
     MongoEngine(app)
+
+
 
     # CORS (api allows cross-origin requests from any origin)
     # Headers: cross-origin-resource-policy is set to allow cross-origin requests
     CORS(app)
 
+
+
     # JWT
     jwt = JWTManager(app)
     register_user_lookup(jwt)
+
+
 
     # API register
     app.register_blueprint(api_bp)
