@@ -12,8 +12,6 @@ from ..utils import paginate
 
 auth_api = Namespace('auth', description='Authentication related operations')
 # auth_api
-
-
 @auth_api.route('/login')
 class login(Resource):
     # post contain request body(username and password)
@@ -39,10 +37,12 @@ class login(Resource):
         return {"user": user.to_dict(), "token": jwt_token}, 201
 
 
+
+
+
+
 # user_api of User List
 user_api = Namespace('users', description='User related operations')
-
-
 @user_api.route('/')
 class UserList(Resource):
     # @jwt_required()
@@ -97,7 +97,9 @@ class UserApi(Resource):
         # usally we return a count of deleted objects
         return user.to_dict(), 200
 
-    
+
+
+
 
 
 student_api = Namespace('students', description='Student related operations')
@@ -115,8 +117,6 @@ class StudentList(Resource):
 
 
 admin_api = Namespace('admins', description='Admin related operations')
-
-
 @admin_api.route('/')
 class AdminList(Resource):
     @permission_required('system_owner')
@@ -131,8 +131,6 @@ class AdminList(Resource):
 
 
 teacher_api = Namespace('teachers', description='Teacher related operations')
-
-
 @teacher_api.route('/')
 class TeacherList(Resource):
     @permission_required()

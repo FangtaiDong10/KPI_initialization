@@ -1,7 +1,6 @@
 from .model import User
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, current_user
 import functools
-from flask_jwt_extended import current_user
 
 
 def permission_required(permission=None):
@@ -28,7 +27,6 @@ def permission_required(permission=None):
 
 
 # taking the jwt manager from app instance
-
 def register_user_lookup(jwt):
 
     def user_lookup_callback(jwt_header, jwt_payload):
