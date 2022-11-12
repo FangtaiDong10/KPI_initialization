@@ -17,6 +17,7 @@ api = Api(api_bp)
 from app.campus.controller import campus_api
 from app.user.controller import auth_api, user_api, student_api, admin_api, teacher_api
 from app.course.controller import course_api
+from app.order.controller import order_api
 from app.user import register_user_lookup
 
 api.add_namespace(campus_api)
@@ -26,7 +27,7 @@ api.add_namespace(student_api)
 api.add_namespace(admin_api)
 api.add_namespace(teacher_api)
 api.add_namespace(course_api)
-
+api.add_namespace(order_api)
 
 def create_app():
     app = Flask(__name__)
