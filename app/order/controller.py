@@ -73,5 +73,10 @@ class OrderPaidApi(Resource):
 
     order.update(**data)
     order.paid = True
+    order.student.enrolled_courses.append(order.course)
+    order.student.save()
+    order.course.enrolled_students.append(order.student)
+    order.course.save()
+    
     order.save()
     return order.to_dict(), 200

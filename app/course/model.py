@@ -22,6 +22,7 @@ class Course(Document):
     publish_time = DateTimeField(default=datetime.now)
     original_price = FloatField()
     cover_image = StringField()
+    enrolled_students = ListField(ReferenceField("User"))
 
     def to_dict(self):
         return {

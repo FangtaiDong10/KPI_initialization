@@ -47,9 +47,16 @@ class User(Document):
 class Student(User):
     wx = StringField()
     uni = StringField()
+    enrolled_courses = ListField(ReferenceField('Course'))
 
     def to_dict(self):
-        return super().to_dict() | {"wx": self.wx, "uni": self.uni}
+        return super().to_dict() | {"wx": self.wx, "uni": self.uni, "enrolled_courses":[
+            { 
+                "id": str(course.id),
+                "name": course.name,
+                "uni_course_code": course.uni_course_code,
+            } for course in self.enrolled_courses
+        ]}
 
 
 class Admin(User):
