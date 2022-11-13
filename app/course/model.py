@@ -6,11 +6,47 @@ from mongoengine import (
     DateTimeField,
     FloatField,
     EmbeddedDocument,
+    EmbeddedDocumentListField,
     EmbeddedDocumentField,
+    UUIDField
 )
 from flask_mongoengine import Document
 from datetime import datetime
+import uuid
 
+class LectureAttachment(EmbeddedDocument):
+    # store the files (using AWS S3 to store files)
+    name = StringField()
+    type = StringField()
+    filename = StringField()
+    bucket_url = StringField()
+
+    def to_dict(self):
+        return {
+            "name": self.name,
+            "type": self.type,
+            "filename": self.filename,
+        }
+    
+
+
+class Lecture(EmbeddedDocument):
+    id = UUIDField(required=True, binary=False, default=uuid.uuid4)
+    title = StringField(defualt="Untitled")
+    streaming_url = StringField()
+    recording_url = StringField()
+    attachments = EmbeddedDocumentListField(LectureAttachment)
+    scheduled_time = DateTimeField()
+
+    def to_dict(self):
+        return {
+            "id": str(self.id),
+            "title": self.title,
+            "streaming_url": self.streaming_url,
+            "recording_url": self.recording_url,
+            "attachments": [attachment.to_dict() for attachment in self.attachments],
+            "scheduled_time": self.scheduled_time and self.scheduled_time.isoformat() or None,
+        }    
 
 class Course(Document):
     name = StringField(required=True, max_length=200)
@@ -22,6 +58,7 @@ class Course(Document):
     publish_time = DateTimeField(default=datetime.now)
     original_price = FloatField()
     cover_image = StringField()
+    lectures = EmbeddedDocumentListField(Lecture)
     enrolled_students = ListField(ReferenceField("User"))
 
     def to_dict(self):
