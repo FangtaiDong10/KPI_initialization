@@ -74,7 +74,7 @@ class LectureListApi(Resource):
 
 # for uploading the attachment by the teacher
 @course_api.route("/<course_id>/lectures/<lecture_id>/attachments")
-class LectureAttachmentApi(Resource):
+class LectureAttachmentListApi(Resource):
     @permission_required("lecture_admin")
     def post(self, course_id, lecture_id):
         course = Course.objects(id=course_id).first_or_404()
@@ -108,3 +108,21 @@ class LectureAttachmentApi(Resource):
         course.save()
         # print(uploaded_file)
         return attachment.to_dict() , 201
+
+
+@course_api.route("/<course_id>/lectures/<lecture_id>/attachments/<filename>")
+class LectureAttachmentApi(Resource):
+    # delete the specific attachment
+    @permission_required("lecture_admin")
+    def delete(self, course_id, lecture_id,filename):
+        course = Course.objects(id=course_id).first_or_404()
+        lecture = course.lectures.filter(id=lecture_id).first()
+
+        if lecture is None:
+            return {"message": "lecture not exists"}, 404
+        
+        del_num = lecture.attachments.filter(filename=filename).delete()
+
+        course.save()
+
+        return del_num , 200
