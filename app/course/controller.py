@@ -7,7 +7,7 @@ from app.user import permission_required
 from .model import Course, Lecture, LectureAttachment
 
 from flask_jwt_extended import create_access_token, current_user, jwt_required
-from ..utils import paginate
+from ..utils import paginate,upload_file_to_s3
 from datetime import datetime
 import json
 
@@ -99,7 +99,12 @@ class LectureAttachmentApi(Resource):
             **json.loads(request.form.get("metadata", default={})), 
             filename = uploaded_file.filename
         )
+
+        # after creating the attachment, we need to upload the file to s3 (gets the file from frontend, and store in the pseudo path in S3)
+        attachment.bucket_url = upload_file_to_s3(uploaded_file, f"lectures/{lecture_id}/attachments")
+
         lecture.attachments.append(attachment)
 
+        course.save()
         # print(uploaded_file)
         return attachment.to_dict() , 201

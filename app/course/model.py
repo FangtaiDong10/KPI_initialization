@@ -13,6 +13,7 @@ from mongoengine import (
 from flask_mongoengine import Document
 from datetime import datetime
 import uuid
+from ..utils import generate_s3_signed_url
 
 class LectureAttachment(EmbeddedDocument):
     # store the files (using AWS S3 to store files)
@@ -26,6 +27,7 @@ class LectureAttachment(EmbeddedDocument):
             "name": self.name,
             "type": self.type,
             "filename": self.filename,
+            "signed_url": generate_s3_signed_url(self.bucket_url),
         }
     
 

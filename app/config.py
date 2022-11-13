@@ -15,3 +15,4 @@ class Config(Config):
     MONGODB_PORT = 27017
     JWT_SECRET_KEY = "secret"
     ERROR_404_HELP = False
+    AWS_BUCKET_NAME = "kpi-spa-demo-dft"
