@@ -15,7 +15,8 @@ course_api = Namespace("courses")
 
 @course_api.route("/")
 class CourseListApi(Resource):
-    @permission_required()
+    # @permission_required()
+    @jwt_required()
     def get(self):
         query = {}
         if "campus" in request.args:

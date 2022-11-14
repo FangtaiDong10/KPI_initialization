@@ -78,4 +78,5 @@ class Course(Document):
             "publish_time": self.publish_time.isoformat(),
             "original_price": self.original_price,
             "cover_image": self.cover_image,
+            "students_count": len(self.enrolled_students)
         }
