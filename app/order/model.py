@@ -10,6 +10,7 @@ from mongoengine import (
 
 from ..user.model import Student
 from ..course.model import Course
+from ..campus.model import Campus
 from datetime import datetime
 
 
@@ -36,6 +37,7 @@ class Order(Document):
         "name": self.course.name,
         "uni_course_code": self.course.uni_course_code,
       },
+      "campus":self.course.campus.to_dict(),
       "created_time": self.created_time.isoformat(),
       "original_price": self.original_price,
       "paid": self.paid,
