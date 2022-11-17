@@ -29,8 +29,9 @@ class OrderListApi(Resource):
     page_num = request.args.get("page", 1, int)
     query = {}
 
-    if "campus" in request.args:
-      query["campus"] = request.args["campus"]
+    # filter whether the user paid for the course
+    if "paid" in request.args:
+      query["paid"] = request.args.get("paid").lower() == "true"
   
     if (current_user._cls != "User.Admin" or "order_admin" not in current_user.permissions):
       query["student"] = current_user.id
