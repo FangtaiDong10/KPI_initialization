@@ -18,6 +18,7 @@ class OrderListApi(Resource):
     order: Order = Order.from_json(request.data)
     if (current_user._cls != "User.Admin" or "order_admin" not in current_user.permissions):
       order.student = current_user.to_dbref()
+    
  
     order.original_price = order.course.original_price
 
@@ -32,11 +33,14 @@ class OrderListApi(Resource):
     # filter whether the user paid for the course
     if "paid" in request.args:
       query["paid"] = request.args.get("paid").lower() == "true"
-  
+    
+    # current_user is not admin 
     if (current_user._cls != "User.Admin" or "order_admin" not in current_user.permissions):
       query["student"] = current_user.id
 
-    return paginate(Order.objects(**query), page_num)
+    # need to be fixed when admin logged in
+    
+    return paginate(Order.objects(**query), page_num=page_num)
 
 @order_api.route("/<order_id>")
 class OrderApi(Resource):
