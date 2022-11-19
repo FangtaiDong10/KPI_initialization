@@ -44,7 +44,8 @@ class CourseApi(Resource):
 
 @course_api.route("/<course_id>/lectures")
 class LectureListApi(Resource):
-    @permission_required("lecture_admin")
+    # @permission_required("lecture_admin")
+    @jwt_required()
     def post(self, course_id):
         course = Course.objects(id=course_id).first_or_404()
 
