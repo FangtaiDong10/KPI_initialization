@@ -66,7 +66,8 @@ class OrderApi(Resource):
         
 @order_api.route("/<order_id>/paid")
 class OrderPaidApi(Resource):
-  @permission_required("order_admin")
+  # @permission_required("order_admin")
+  @jwt_required()
   def post(self, order_id):
     order = Order.objects(id=order_id).first_or_404()
     
