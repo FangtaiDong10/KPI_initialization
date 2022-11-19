@@ -76,7 +76,8 @@ class LectureListApi(Resource):
 # for uploading the attachment by the teacher
 @course_api.route("/<course_id>/lectures/<lecture_id>/attachments")
 class LectureAttachmentListApi(Resource):
-    @permission_required("lecture_admin")
+    # @permission_required("lecture_admin")
+    jwt_required()
     def post(self, course_id, lecture_id):
         course = Course.objects(id=course_id).first_or_404()
         
